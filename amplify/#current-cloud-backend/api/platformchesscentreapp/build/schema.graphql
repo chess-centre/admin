@@ -1,0 +1,1019 @@
+type MailingList @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  email: String!
+  enabled: Boolean!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Broadcast @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  buttonName: String
+  isLive: Boolean
+  description: String
+  name: String
+  pageUrl: String
+  dgtUrl: String
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Result @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  pairings: AWSJSON
+  results: AWSJSON
+  players: AWSJSON
+  eventID: ID
+  name: String
+  complete: Boolean
+  live: Boolean
+  winner: String
+  dgtCloudUrl: String
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type S3Object @aws_api_key @aws_iam @aws_cognito_user_pools {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type Game @aws_api_key @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  eventId: ID!
+  eventName: String
+  date: String
+  whiteMemberId: ID!
+  whiteName: String
+  whiteRating: Int
+  blackMemberId: ID!
+  blackName: String
+  blackRating: Int
+  round: Int
+  result: String
+  type: String
+  pgn: S3Object
+  pgnStr: String
+  liChessUrl: String
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  whiteMember: Member @aws_iam @aws_cognito_user_pools
+  blackMember: Member @aws_iam @aws_cognito_user_pools
+  event: Event @aws_iam @aws_cognito_user_pools
+}
+
+type Plan @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  key: String!
+  stripePriceId: String!
+  stripeProductId: String!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type EventType @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  name: String!
+  description: String
+  url: String
+  color: String
+  time: String
+  maxEntries: Int
+  stripePriceId: String
+  timeControl: String
+  eventType: String
+  defaultPrice: String
+  canRegister: Boolean
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Member @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  about: String
+  fideId: String
+  ecfId: String
+  username: String
+  name: String
+  email: String
+  games: [Game!]
+  ecfRating: String
+  ecfRapid: String
+  ecfMembership: String
+  estimatedRating: String
+  club: String
+  gender: String
+  membershipType: String
+  gameInfo: AWSJSON
+  ratingInfo: AWSJSON
+  liChessUsername: String
+  liChessInfo: AWSJSON
+  chesscomUsername: String
+  chesscomInfo: AWSJSON
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  stripeCustomerId: ID @aws_iam @aws_cognito_user_pools
+  stripeCurrentPeriodEnd: Float @aws_iam @aws_cognito_user_pools
+  stripePriceId: ID @aws_iam @aws_cognito_user_pools
+  stripeProductId: ID @aws_iam @aws_cognito_user_pools
+  entries(filter: ModelEntryFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelEntryConnection @aws_iam @aws_cognito_user_pools
+}
+
+type Event @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  name: String
+  description: String
+  rounds: Int
+  time: String
+  startDate: AWSDate!
+  endDate: AWSDate
+  maxEntries: Int
+  entryCount: Int
+  complete: Boolean
+  cancelled: Boolean
+  isLive: Boolean
+  active: String
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  results(filter: ModelResultFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelResultConnection @aws_iam @aws_cognito_user_pools
+  games(filter: ModelGameFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelGameConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  type: EventType! @aws_iam @aws_cognito_user_pools
+  entries(filter: ModelEntryFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelEntryConnection @aws_iam @aws_cognito_user_pools
+}
+
+type Entry @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  eventId: ID!
+  memberId: ID!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  member: Member @aws_iam @aws_cognito_user_pools
+  event: Event @aws_iam @aws_cognito_user_pools
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelMailingListConnection @aws_iam @aws_cognito_user_pools {
+  items: [MailingList]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelMailingListFilterInput {
+  id: ModelIDInput
+  email: ModelStringInput
+  enabled: ModelBooleanInput
+  and: [ModelMailingListFilterInput]
+  or: [ModelMailingListFilterInput]
+  not: ModelMailingListFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getMailingList(id: ID!): MailingList @aws_iam @aws_cognito_user_pools
+  listMailingLists(filter: ModelMailingListFilterInput, limit: Int, nextToken: String): ModelMailingListConnection @aws_iam @aws_cognito_user_pools
+  syncMailingLists(filter: ModelMailingListFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelMailingListConnection @aws_iam @aws_cognito_user_pools
+  getBroadcast(id: ID!): Broadcast @aws_iam @aws_cognito_user_pools
+  listBroadcasts(filter: ModelBroadcastFilterInput, limit: Int, nextToken: String): ModelBroadcastConnection @aws_iam @aws_cognito_user_pools
+  syncBroadcasts(filter: ModelBroadcastFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelBroadcastConnection @aws_iam @aws_cognito_user_pools
+  getResult(id: ID!): Result @aws_iam @aws_cognito_user_pools
+  listResults(filter: ModelResultFilterInput, limit: Int, nextToken: String): ModelResultConnection @aws_iam @aws_cognito_user_pools
+  syncResults(filter: ModelResultFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelResultConnection @aws_iam @aws_cognito_user_pools
+  getGame(id: ID!): Game @aws_api_key @aws_iam @aws_cognito_user_pools
+  listGames(filter: ModelGameFilterInput, limit: Int, nextToken: String): ModelGameConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  listGamesByEvent(eventId: ID, sortDirection: ModelSortDirection, filter: ModelGameFilterInput, limit: Int, nextToken: String): ModelGameConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  listGamesByWhiteMember(whiteMemberId: ID, sortDirection: ModelSortDirection, filter: ModelGameFilterInput, limit: Int, nextToken: String): ModelGameConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  listGamesByBlackMember(blackMemberId: ID, sortDirection: ModelSortDirection, filter: ModelGameFilterInput, limit: Int, nextToken: String): ModelGameConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  syncGames(filter: ModelGameFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelGameConnection @aws_api_key @aws_iam @aws_cognito_user_pools
+  getPlan(id: ID!): Plan @aws_iam @aws_cognito_user_pools
+  listPlans(filter: ModelPlanFilterInput, limit: Int, nextToken: String): ModelPlanConnection @aws_iam @aws_cognito_user_pools
+  syncPlans(filter: ModelPlanFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelPlanConnection @aws_iam @aws_cognito_user_pools
+  getEventType(id: ID!): EventType @aws_iam @aws_cognito_user_pools
+  listEventTypes(filter: ModelEventTypeFilterInput, limit: Int, nextToken: String): ModelEventTypeConnection @aws_iam @aws_cognito_user_pools
+  syncEventTypes(filter: ModelEventTypeFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelEventTypeConnection @aws_iam @aws_cognito_user_pools
+  syncMembers(filter: ModelMemberFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelMemberConnection @aws_iam @aws_cognito_user_pools
+  getMember(id: ID!): Member @aws_iam @aws_cognito_user_pools
+  listMembers(filter: ModelMemberFilterInput, limit: Int, nextToken: String): ModelMemberConnection @aws_iam @aws_cognito_user_pools
+  getEvent(id: ID!): Event @aws_iam @aws_cognito_user_pools
+  listEvents(filter: ModelEventFilterInput, limit: Int, nextToken: String): ModelEventConnection @aws_iam @aws_cognito_user_pools
+  listEventsActive(active: String, startDate: ModelStringKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelEventFilterInput, limit: Int, nextToken: String): ModelEventConnection @aws_iam @aws_cognito_user_pools
+  syncEvents(filter: ModelEventFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelEventConnection @aws_iam @aws_cognito_user_pools
+  getEntry(id: ID!): Entry @aws_iam @aws_cognito_user_pools
+  listEntrys(filter: ModelEntryFilterInput, limit: Int, nextToken: String): ModelEntryConnection @aws_iam @aws_cognito_user_pools
+  syncEntries(filter: ModelEntryFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelEntryConnection @aws_iam @aws_cognito_user_pools
+}
+
+input CreateMailingListInput {
+  id: ID
+  email: String!
+  enabled: Boolean!
+  _version: Int
+}
+
+input UpdateMailingListInput {
+  id: ID!
+  email: String
+  enabled: Boolean
+  _version: Int
+}
+
+input DeleteMailingListInput {
+  id: ID!
+  _version: Int
+}
+
+type Mutation {
+  createMailingList(input: CreateMailingListInput!, condition: ModelMailingListConditionInput): MailingList @aws_iam @aws_cognito_user_pools
+  updateMailingList(input: UpdateMailingListInput!, condition: ModelMailingListConditionInput): MailingList @aws_iam @aws_cognito_user_pools
+  deleteMailingList(input: DeleteMailingListInput!, condition: ModelMailingListConditionInput): MailingList @aws_iam @aws_cognito_user_pools
+  createBroadcast(input: CreateBroadcastInput!, condition: ModelBroadcastConditionInput): Broadcast @aws_iam @aws_cognito_user_pools
+  updateBroadcast(input: UpdateBroadcastInput!, condition: ModelBroadcastConditionInput): Broadcast @aws_iam @aws_cognito_user_pools
+  deleteBroadcast(input: DeleteBroadcastInput!, condition: ModelBroadcastConditionInput): Broadcast @aws_iam @aws_cognito_user_pools
+  createResult(input: CreateResultInput!, condition: ModelResultConditionInput): Result @aws_iam @aws_cognito_user_pools
+  updateResult(input: UpdateResultInput!, condition: ModelResultConditionInput): Result @aws_iam @aws_cognito_user_pools
+  deleteResult(input: DeleteResultInput!, condition: ModelResultConditionInput): Result @aws_iam @aws_cognito_user_pools
+  createGame(input: CreateGameInput!, condition: ModelGameConditionInput): Game @aws_api_key @aws_iam @aws_cognito_user_pools
+  updateGame(input: UpdateGameInput!, condition: ModelGameConditionInput): Game @aws_api_key @aws_iam @aws_cognito_user_pools
+  deleteGame(input: DeleteGameInput!, condition: ModelGameConditionInput): Game @aws_api_key @aws_iam @aws_cognito_user_pools
+  createPlan(input: CreatePlanInput!, condition: ModelPlanConditionInput): Plan @aws_iam @aws_cognito_user_pools
+  updatePlan(input: UpdatePlanInput!, condition: ModelPlanConditionInput): Plan @aws_iam @aws_cognito_user_pools
+  deletePlan(input: DeletePlanInput!, condition: ModelPlanConditionInput): Plan @aws_iam @aws_cognito_user_pools
+  createEventType(input: CreateEventTypeInput!, condition: ModelEventTypeConditionInput): EventType @aws_iam @aws_cognito_user_pools
+  updateEventType(input: UpdateEventTypeInput!, condition: ModelEventTypeConditionInput): EventType @aws_iam @aws_cognito_user_pools
+  deleteEventType(input: DeleteEventTypeInput!, condition: ModelEventTypeConditionInput): EventType @aws_iam @aws_cognito_user_pools
+  createMember(input: CreateMemberInput!, condition: ModelMemberConditionInput): Member @aws_iam
+  updateMember(input: UpdateMemberInput!, condition: ModelMemberConditionInput): Member @aws_iam @aws_cognito_user_pools
+  deleteMember(input: DeleteMemberInput!, condition: ModelMemberConditionInput): Member @aws_iam
+  createEvent(input: CreateEventInput!, condition: ModelEventConditionInput): Event @aws_iam @aws_cognito_user_pools
+  updateEvent(input: UpdateEventInput!, condition: ModelEventConditionInput): Event @aws_iam @aws_cognito_user_pools
+  deleteEvent(input: DeleteEventInput!, condition: ModelEventConditionInput): Event @aws_iam @aws_cognito_user_pools
+  createEntry(input: CreateEntryInput!, condition: ModelEntryConditionInput): Entry @aws_iam @aws_cognito_user_pools
+  updateEntry(input: UpdateEntryInput!, condition: ModelEntryConditionInput): Entry @aws_iam @aws_cognito_user_pools
+  deleteEntry(input: DeleteEntryInput!, condition: ModelEntryConditionInput): Entry @aws_iam @aws_cognito_user_pools
+}
+
+input ModelMailingListConditionInput {
+  email: ModelStringInput
+  enabled: ModelBooleanInput
+  and: [ModelMailingListConditionInput]
+  or: [ModelMailingListConditionInput]
+  not: ModelMailingListConditionInput
+}
+
+type Subscription {
+  onCreateMailingList: MailingList @aws_subscribe(mutations: ["createMailingList"]) @aws_iam @aws_cognito_user_pools
+  onUpdateMailingList: MailingList @aws_subscribe(mutations: ["updateMailingList"]) @aws_iam @aws_cognito_user_pools
+  onDeleteMailingList: MailingList @aws_subscribe(mutations: ["deleteMailingList"]) @aws_iam @aws_cognito_user_pools
+  onCreateBroadcast: Broadcast @aws_subscribe(mutations: ["createBroadcast"]) @aws_iam @aws_cognito_user_pools
+  onUpdateBroadcast: Broadcast @aws_subscribe(mutations: ["updateBroadcast"]) @aws_iam @aws_cognito_user_pools
+  onDeleteBroadcast: Broadcast @aws_subscribe(mutations: ["deleteBroadcast"]) @aws_iam @aws_cognito_user_pools
+  onCreateResult: Result @aws_subscribe(mutations: ["createResult"]) @aws_iam @aws_cognito_user_pools
+  onUpdateResult: Result @aws_subscribe(mutations: ["updateResult"]) @aws_iam @aws_cognito_user_pools
+  onDeleteResult: Result @aws_subscribe(mutations: ["deleteResult"]) @aws_iam @aws_cognito_user_pools
+  onCreateGame: Game @aws_subscribe(mutations: ["createGame"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onUpdateGame: Game @aws_subscribe(mutations: ["updateGame"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onDeleteGame: Game @aws_subscribe(mutations: ["deleteGame"]) @aws_api_key @aws_iam @aws_cognito_user_pools
+  onCreatePlan: Plan @aws_subscribe(mutations: ["createPlan"]) @aws_iam @aws_cognito_user_pools
+  onUpdatePlan: Plan @aws_subscribe(mutations: ["updatePlan"]) @aws_iam @aws_cognito_user_pools
+  onDeletePlan: Plan @aws_subscribe(mutations: ["deletePlan"]) @aws_iam @aws_cognito_user_pools
+  onCreateEventType: EventType @aws_subscribe(mutations: ["createEventType"]) @aws_iam @aws_cognito_user_pools
+  onUpdateEventType: EventType @aws_subscribe(mutations: ["updateEventType"]) @aws_iam @aws_cognito_user_pools
+  onDeleteEventType: EventType @aws_subscribe(mutations: ["deleteEventType"]) @aws_iam @aws_cognito_user_pools
+  onCreateMember: Member @aws_subscribe(mutations: ["createMember"]) @aws_iam @aws_cognito_user_pools
+  onUpdateMember: Member @aws_subscribe(mutations: ["updateMember"]) @aws_iam @aws_cognito_user_pools
+  onDeleteMember: Member @aws_subscribe(mutations: ["deleteMember"]) @aws_iam @aws_cognito_user_pools
+  onCreateEvent: Event @aws_subscribe(mutations: ["createEvent"]) @aws_iam @aws_cognito_user_pools
+  onUpdateEvent: Event @aws_subscribe(mutations: ["updateEvent"]) @aws_iam @aws_cognito_user_pools
+  onDeleteEvent: Event @aws_subscribe(mutations: ["deleteEvent"]) @aws_iam @aws_cognito_user_pools
+  onCreateEntry: Entry @aws_subscribe(mutations: ["createEntry"]) @aws_iam @aws_cognito_user_pools
+  onUpdateEntry: Entry @aws_subscribe(mutations: ["updateEntry"]) @aws_iam @aws_cognito_user_pools
+  onDeleteEntry: Entry @aws_subscribe(mutations: ["deleteEntry"]) @aws_iam @aws_cognito_user_pools
+}
+
+type ModelBroadcastConnection @aws_iam @aws_cognito_user_pools {
+  items: [Broadcast]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelBroadcastFilterInput {
+  id: ModelIDInput
+  buttonName: ModelStringInput
+  isLive: ModelBooleanInput
+  description: ModelStringInput
+  name: ModelStringInput
+  pageUrl: ModelStringInput
+  dgtUrl: ModelStringInput
+  and: [ModelBroadcastFilterInput]
+  or: [ModelBroadcastFilterInput]
+  not: ModelBroadcastFilterInput
+}
+
+input CreateBroadcastInput {
+  id: ID
+  buttonName: String
+  isLive: Boolean
+  description: String
+  name: String
+  pageUrl: String
+  dgtUrl: String
+  _version: Int
+}
+
+input UpdateBroadcastInput {
+  id: ID!
+  buttonName: String
+  isLive: Boolean
+  description: String
+  name: String
+  pageUrl: String
+  dgtUrl: String
+  _version: Int
+}
+
+input DeleteBroadcastInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelBroadcastConditionInput {
+  buttonName: ModelStringInput
+  isLive: ModelBooleanInput
+  description: ModelStringInput
+  name: ModelStringInput
+  pageUrl: ModelStringInput
+  dgtUrl: ModelStringInput
+  and: [ModelBroadcastConditionInput]
+  or: [ModelBroadcastConditionInput]
+  not: ModelBroadcastConditionInput
+}
+
+type ModelResultConnection @aws_iam @aws_cognito_user_pools {
+  items: [Result]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelResultFilterInput {
+  id: ModelIDInput
+  pairings: ModelStringInput
+  results: ModelStringInput
+  players: ModelStringInput
+  eventID: ModelIDInput
+  name: ModelStringInput
+  complete: ModelBooleanInput
+  live: ModelBooleanInput
+  winner: ModelStringInput
+  dgtCloudUrl: ModelStringInput
+  and: [ModelResultFilterInput]
+  or: [ModelResultFilterInput]
+  not: ModelResultFilterInput
+}
+
+input CreateResultInput {
+  id: ID
+  pairings: AWSJSON
+  results: AWSJSON
+  players: AWSJSON
+  eventID: ID
+  name: String
+  complete: Boolean
+  live: Boolean
+  winner: String
+  dgtCloudUrl: String
+  _version: Int
+}
+
+input UpdateResultInput {
+  id: ID!
+  pairings: AWSJSON
+  results: AWSJSON
+  players: AWSJSON
+  eventID: ID
+  name: String
+  complete: Boolean
+  live: Boolean
+  winner: String
+  dgtCloudUrl: String
+  _version: Int
+}
+
+input DeleteResultInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelResultConditionInput {
+  pairings: ModelStringInput
+  results: ModelStringInput
+  players: ModelStringInput
+  eventID: ModelIDInput
+  name: ModelStringInput
+  complete: ModelBooleanInput
+  live: ModelBooleanInput
+  winner: ModelStringInput
+  dgtCloudUrl: ModelStringInput
+  and: [ModelResultConditionInput]
+  or: [ModelResultConditionInput]
+  not: ModelResultConditionInput
+}
+
+input S3ObjectInput {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type ModelGameConnection @aws_api_key @aws_iam @aws_cognito_user_pools {
+  items: [Game]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelGameFilterInput {
+  id: ModelIDInput
+  eventId: ModelIDInput
+  eventName: ModelStringInput
+  date: ModelStringInput
+  whiteMemberId: ModelIDInput
+  whiteName: ModelStringInput
+  whiteRating: ModelIntInput
+  blackMemberId: ModelIDInput
+  blackName: ModelStringInput
+  blackRating: ModelIntInput
+  round: ModelIntInput
+  result: ModelStringInput
+  type: ModelStringInput
+  pgnStr: ModelStringInput
+  liChessUrl: ModelStringInput
+  and: [ModelGameFilterInput]
+  or: [ModelGameFilterInput]
+  not: ModelGameFilterInput
+}
+
+input CreateGameInput {
+  id: ID
+  eventId: ID!
+  eventName: String
+  date: String
+  whiteMemberId: ID!
+  whiteName: String
+  whiteRating: Int
+  blackMemberId: ID!
+  blackName: String
+  blackRating: Int
+  round: Int
+  result: String
+  type: String
+  pgn: S3ObjectInput
+  pgnStr: String
+  liChessUrl: String
+  _version: Int
+}
+
+input UpdateGameInput {
+  id: ID!
+  eventId: ID
+  eventName: String
+  date: String
+  whiteMemberId: ID
+  whiteName: String
+  whiteRating: Int
+  blackMemberId: ID
+  blackName: String
+  blackRating: Int
+  round: Int
+  result: String
+  type: String
+  pgn: S3ObjectInput
+  pgnStr: String
+  liChessUrl: String
+  _version: Int
+}
+
+input DeleteGameInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelGameConditionInput {
+  eventId: ModelIDInput
+  eventName: ModelStringInput
+  date: ModelStringInput
+  whiteMemberId: ModelIDInput
+  whiteName: ModelStringInput
+  whiteRating: ModelIntInput
+  blackMemberId: ModelIDInput
+  blackName: ModelStringInput
+  blackRating: ModelIntInput
+  round: ModelIntInput
+  result: ModelStringInput
+  type: ModelStringInput
+  pgnStr: ModelStringInput
+  liChessUrl: ModelStringInput
+  and: [ModelGameConditionInput]
+  or: [ModelGameConditionInput]
+  not: ModelGameConditionInput
+}
+
+type ModelPlanConnection @aws_iam @aws_cognito_user_pools {
+  items: [Plan]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelPlanFilterInput {
+  id: ModelIDInput
+  key: ModelStringInput
+  stripePriceId: ModelStringInput
+  stripeProductId: ModelStringInput
+  and: [ModelPlanFilterInput]
+  or: [ModelPlanFilterInput]
+  not: ModelPlanFilterInput
+}
+
+input CreatePlanInput {
+  id: ID
+  key: String!
+  stripePriceId: String!
+  stripeProductId: String!
+  _version: Int
+}
+
+input UpdatePlanInput {
+  id: ID!
+  key: String
+  stripePriceId: String
+  stripeProductId: String
+  _version: Int
+}
+
+input DeletePlanInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelPlanConditionInput {
+  key: ModelStringInput
+  stripePriceId: ModelStringInput
+  stripeProductId: ModelStringInput
+  and: [ModelPlanConditionInput]
+  or: [ModelPlanConditionInput]
+  not: ModelPlanConditionInput
+}
+
+type ModelEventTypeConnection @aws_iam @aws_cognito_user_pools {
+  items: [EventType]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelEventTypeFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  url: ModelStringInput
+  color: ModelStringInput
+  time: ModelStringInput
+  maxEntries: ModelIntInput
+  stripePriceId: ModelStringInput
+  timeControl: ModelStringInput
+  eventType: ModelStringInput
+  defaultPrice: ModelStringInput
+  canRegister: ModelBooleanInput
+  and: [ModelEventTypeFilterInput]
+  or: [ModelEventTypeFilterInput]
+  not: ModelEventTypeFilterInput
+}
+
+input CreateEventTypeInput {
+  id: ID
+  name: String!
+  description: String
+  url: String
+  color: String
+  time: String
+  maxEntries: Int
+  stripePriceId: String
+  timeControl: String
+  eventType: String
+  defaultPrice: String
+  canRegister: Boolean
+  _version: Int
+}
+
+input UpdateEventTypeInput {
+  id: ID!
+  name: String
+  description: String
+  url: String
+  color: String
+  time: String
+  maxEntries: Int
+  stripePriceId: String
+  timeControl: String
+  eventType: String
+  defaultPrice: String
+  canRegister: Boolean
+  _version: Int
+}
+
+input DeleteEventTypeInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelEventTypeConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  url: ModelStringInput
+  color: ModelStringInput
+  time: ModelStringInput
+  maxEntries: ModelIntInput
+  stripePriceId: ModelStringInput
+  timeControl: ModelStringInput
+  eventType: ModelStringInput
+  defaultPrice: ModelStringInput
+  canRegister: ModelBooleanInput
+  and: [ModelEventTypeConditionInput]
+  or: [ModelEventTypeConditionInput]
+  not: ModelEventTypeConditionInput
+}
+
+type ModelMemberConnection @aws_iam @aws_cognito_user_pools {
+  items: [Member]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelMemberFilterInput {
+  id: ModelIDInput
+  about: ModelStringInput
+  fideId: ModelStringInput
+  ecfId: ModelStringInput
+  username: ModelStringInput
+  name: ModelStringInput
+  email: ModelStringInput
+  stripeCustomerId: ModelIDInput
+  stripeCurrentPeriodEnd: ModelFloatInput
+  stripePriceId: ModelIDInput
+  stripeProductId: ModelIDInput
+  ecfRating: ModelStringInput
+  ecfRapid: ModelStringInput
+  ecfMembership: ModelStringInput
+  estimatedRating: ModelStringInput
+  club: ModelStringInput
+  gender: ModelStringInput
+  membershipType: ModelStringInput
+  gameInfo: ModelStringInput
+  ratingInfo: ModelStringInput
+  liChessUsername: ModelStringInput
+  liChessInfo: ModelStringInput
+  chesscomUsername: ModelStringInput
+  chesscomInfo: ModelStringInput
+  and: [ModelMemberFilterInput]
+  or: [ModelMemberFilterInput]
+  not: ModelMemberFilterInput
+}
+
+input CreateMemberInput {
+  id: ID
+  about: String
+  fideId: String
+  ecfId: String
+  username: String
+  name: String
+  email: String
+  stripeCustomerId: ID
+  stripeCurrentPeriodEnd: Float
+  stripePriceId: ID
+  stripeProductId: ID
+  ecfRating: String
+  ecfRapid: String
+  ecfMembership: String
+  estimatedRating: String
+  club: String
+  gender: String
+  membershipType: String
+  gameInfo: AWSJSON
+  ratingInfo: AWSJSON
+  liChessUsername: String
+  liChessInfo: AWSJSON
+  chesscomUsername: String
+  chesscomInfo: AWSJSON
+  _version: Int
+}
+
+input UpdateMemberInput {
+  id: ID!
+  about: String
+  fideId: String
+  ecfId: String
+  username: String
+  name: String
+  email: String
+  stripeCustomerId: ID
+  stripeCurrentPeriodEnd: Float
+  stripePriceId: ID
+  stripeProductId: ID
+  ecfRating: String
+  ecfRapid: String
+  ecfMembership: String
+  estimatedRating: String
+  club: String
+  gender: String
+  membershipType: String
+  gameInfo: AWSJSON
+  ratingInfo: AWSJSON
+  liChessUsername: String
+  liChessInfo: AWSJSON
+  chesscomUsername: String
+  chesscomInfo: AWSJSON
+  _version: Int
+}
+
+input DeleteMemberInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelMemberConditionInput {
+  about: ModelStringInput
+  fideId: ModelStringInput
+  ecfId: ModelStringInput
+  username: ModelStringInput
+  name: ModelStringInput
+  email: ModelStringInput
+  stripeCustomerId: ModelIDInput
+  stripeCurrentPeriodEnd: ModelFloatInput
+  stripePriceId: ModelIDInput
+  stripeProductId: ModelIDInput
+  ecfRating: ModelStringInput
+  ecfRapid: ModelStringInput
+  ecfMembership: ModelStringInput
+  estimatedRating: ModelStringInput
+  club: ModelStringInput
+  gender: ModelStringInput
+  membershipType: ModelStringInput
+  gameInfo: ModelStringInput
+  ratingInfo: ModelStringInput
+  liChessUsername: ModelStringInput
+  liChessInfo: ModelStringInput
+  chesscomUsername: ModelStringInput
+  chesscomInfo: ModelStringInput
+  and: [ModelMemberConditionInput]
+  or: [ModelMemberConditionInput]
+  not: ModelMemberConditionInput
+}
+
+type ModelEventConnection @aws_iam @aws_cognito_user_pools {
+  items: [Event]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelEventFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  rounds: ModelIntInput
+  time: ModelStringInput
+  startDate: ModelStringInput
+  endDate: ModelStringInput
+  maxEntries: ModelIntInput
+  entryCount: ModelIntInput
+  complete: ModelBooleanInput
+  cancelled: ModelBooleanInput
+  isLive: ModelBooleanInput
+  active: ModelStringInput
+  and: [ModelEventFilterInput]
+  or: [ModelEventFilterInput]
+  not: ModelEventFilterInput
+}
+
+input CreateEventInput {
+  id: ID
+  name: String
+  description: String
+  rounds: Int
+  time: String
+  startDate: AWSDate!
+  endDate: AWSDate
+  maxEntries: Int
+  entryCount: Int
+  complete: Boolean
+  cancelled: Boolean
+  isLive: Boolean
+  active: String
+  _version: Int
+  eventTypeId: ID!
+}
+
+input UpdateEventInput {
+  id: ID!
+  name: String
+  description: String
+  rounds: Int
+  time: String
+  startDate: AWSDate
+  endDate: AWSDate
+  maxEntries: Int
+  entryCount: Int
+  complete: Boolean
+  cancelled: Boolean
+  isLive: Boolean
+  active: String
+  _version: Int
+  eventTypeId: ID
+}
+
+input DeleteEventInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelEventConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  rounds: ModelIntInput
+  time: ModelStringInput
+  startDate: ModelStringInput
+  endDate: ModelStringInput
+  maxEntries: ModelIntInput
+  entryCount: ModelIntInput
+  complete: ModelBooleanInput
+  cancelled: ModelBooleanInput
+  isLive: ModelBooleanInput
+  active: ModelStringInput
+  and: [ModelEventConditionInput]
+  or: [ModelEventConditionInput]
+  not: ModelEventConditionInput
+}
+
+type ModelEntryConnection @aws_iam @aws_cognito_user_pools {
+  items: [Entry]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelEntryFilterInput {
+  id: ModelIDInput
+  eventId: ModelIDInput
+  memberId: ModelIDInput
+  and: [ModelEntryFilterInput]
+  or: [ModelEntryFilterInput]
+  not: ModelEntryFilterInput
+}
+
+input CreateEntryInput {
+  id: ID
+  eventId: ID!
+  memberId: ID!
+  _version: Int
+}
+
+input UpdateEntryInput {
+  id: ID!
+  eventId: ID
+  memberId: ID
+  _version: Int
+}
+
+input DeleteEntryInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelEntryConditionInput {
+  eventId: ModelIDInput
+  memberId: ModelIDInput
+  and: [ModelEntryConditionInput]
+  or: [ModelEntryConditionInput]
+  not: ModelEntryConditionInput
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
+}

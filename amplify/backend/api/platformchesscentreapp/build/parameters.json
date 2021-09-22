@@ -1,0 +1,20 @@
+{
+    "CreateAPIKey": 1,
+    "AppSyncApiName": "platformchesscentreapp",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authplatformchesscentreapp",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "S3DeploymentBucket": "amplify-platformchesscentrea-dev-45655-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/ecc72162acd4e5b008cc608fbed563b5cb4477f1"
+}
