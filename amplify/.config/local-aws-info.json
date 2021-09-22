@@ -1,7 +1,5 @@
 {
   "dev": {
-    "configLevel": "project",
-    "useProfile": false,
-    "awsConfigFilePath": "C:\\Users\\user\\.amplify\\awscloudformation\\MrCDxNP7B5"
+    "configLevel": "amplifyAdmin"
   }
 }

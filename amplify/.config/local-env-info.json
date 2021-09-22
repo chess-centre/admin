@@ -1,4 +1,6 @@
 {
   "projectPath": "C:\\Users\\user\\develop\\admin",
-  "envName": "dev"
+  "envName": "dev",
+  "defaultEditor": "vscode",
+  "noUpdateBackend": true
 }
